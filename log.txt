@@ -1,0 +1,6 @@
+Fri Jun 10 2022 21:36:46 GMT+0800 (中国标准时间) -- GET -- /dog -- 1234ms
+Fri Jun 10 2022 21:55:48 GMT+0800 (中国标准时间) -- POST -- /test/2?id=2&name=smiling. -- 1ms
+Fri Jun 10 2022 21:58:03 GMT+0800 (中国标准时间) -- GET -- /dog -- 1373ms
+Fri Jun 10 2022 22:18:04 GMT+0800 (中国标准时间) -- GET -- /dog -- 1731ms
+Sat Jun 11 2022 16:13:16 GMT+0800 (中国标准时间) -- POST -- /test/2?id=2&name=smiling. -- 1178ms
+Sat Jun 11 2022 16:16:23 GMT+0800 (中国标准时间) -- POST -- /test/2?id=2&name=smiling. -- 1400ms -- lego-backend

@@ -1,0 +1,11 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>The Dog Show</title>
+  </head>
+  <body>
+    <h1>Hello, Dog Show</h1>
+    <img src="{{url}}"/>
+  </body>
+</html>
