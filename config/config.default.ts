@@ -34,7 +34,20 @@ export default (appInfo: EggAppInfo) => {
   };
 
   config.mongoose = {
-    url: 'mongodb://localhost:27017/lego',
+    url: 'mongodb://127.0.0.1:27017/lego',
+  };
+
+  config.validate = {
+    // convert: false,
+    // validateRoot: false,
+  };
+
+  config.bcrypt = {
+    saltRounds: 10, //  默认加密 10 次
+  };
+
+  config.session = {
+    encrypt: false,
   };
 
   const bizConfig = {

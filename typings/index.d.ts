@@ -8,7 +8,24 @@ declare module 'egg' {
     }
 
     interface Application {
-        mongoose: Condition,
+        mongoose: Condition
         model: MongooseModels
+        sessionMap: {
+            [key: string]: any
+        }
+        sessionStore: any
+    }
+
+    interface Context {
+        //  egg-bcrypt 插件方法类型定义
+        genHash(plaintext: string): Promise<string>,
+        compare(plaintext: string, hash: string): Promise<boolean>
+    }
+
+    interface EggAppConfig {
+        //  egg-bcrypt 插件配置属性类型定义
+        bcrypt: {
+            saltRounds: number
+        }
     }
 }
