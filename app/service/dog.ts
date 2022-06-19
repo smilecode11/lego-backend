@@ -12,5 +12,11 @@ export default class DogService extends Service {
     });
     return resp.data;
   }
-}
 
+  async showPersons() {
+    const result = await this.app.model.User.find({
+      dept_id: { $exists: true },
+    }).exec();
+    return result;
+  }
+}

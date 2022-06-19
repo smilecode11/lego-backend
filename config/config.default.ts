@@ -29,13 +29,18 @@ export default (appInfo: EggAppInfo) => {
 
   //  配置 DEBUG 及以上会被输出
   config.logger = {
-    consoleLevel: 'DEBUG'
-  }
+    consoleLevel: 'DEBUG', //  consnole 输出日志最低等级
+    level: 'DEBUG', //  log 文件日志输出最低等级
+  };
+
+  config.mongoose = {
+    url: 'mongodb://localhost:27017/lego',
+  };
 
   const bizConfig = {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
     myLogger: { //  配置中间件允许 POST 方法时被使用
-      allowedMethod: ['POST'],
+      allowedMethod: [ 'POST' ],
     },
     baseUrl: 'default.url',
   };
