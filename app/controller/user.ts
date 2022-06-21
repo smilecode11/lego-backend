@@ -18,6 +18,10 @@ export const userErrorMessages = {
     errno: 101003,
     message: '用户名或密码验证失败',
   },
+  loginValidateFail: {
+    errno: 101004,
+    message: '登录校验失败',
+  },
 };
 
 export default class UserController extends Controller {
@@ -46,7 +50,7 @@ export default class UserController extends Controller {
 
   /** 用户登录 - 邮箱*/
   async loginByEmail() {
-    const { ctx, service } = this;
+    const { ctx, service, app } = this;
     //  检查用户输入
     const error = this.validateUserInput();
     if (error) {
@@ -65,20 +69,25 @@ export default class UserController extends Controller {
     }
     //  设置 cookie, encrypt 属性表示对 cookie 进行加密
     // ctx.cookies.set('username', user.username, { encrypt: true });
-
     //  设置 session
-    ctx.session.username = user.username;
-    ctx.helper.success({ ctx, res: user, msg: '登录成功' });
+    // ctx.session.username = user.username;
+
+    //  使用 egg-jwt 在 app 上扩展的 jwt 对象进行 sign 调用
+    const token = app.jwt.sign({ username }, app.config.jwt.secret, { expiresIn: 60 * 60 });
+    ctx.helper.success({ ctx, res: { token }, msg: '登录成功' });
   }
 
   async current() {
-    const { ctx } = this;
+    const { ctx, service } = this;
     //  加密的 cookie 进行访问, 也必须天极爱 encrypt 属性
     // const username = ctx.cookies.get('username', { encrypt: true });
-    const { username } = ctx.session;
-    if (!username) {
-      return ctx.helper.error({ ctx, errorType: 'loginCheckFail' });
-    }
-    ctx.helper.success({ ctx, res: { username } });
+    // const { username } = ctx.session;
+    // if (!username) {
+    //  return ctx.helper.error({ ctx, errorType: 'loginCheckFail' });
+    // }
+    // ctx.helper.success({ ctx, res: { username } });
+
+    const userData = await service.user.findByUsername(ctx.state.user.username);
+    ctx.helper.success({ ctx, res: userData });
   }
 }

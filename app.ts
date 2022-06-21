@@ -3,18 +3,18 @@ export default class AppBoot implements IBoot {
   private readonly app: Application;
   constructor(app: Application) {
     this.app = app;
-    app.sessionMap = {};
-    app.sessionStore = {
-      async get(key) {
-        return app.sessionMap[key];
-      },
-      async set(key, value) {
-        app.sessionMap[key] = value;
-      },
-      async destroy(key) {
-        delete app.sessionMap[key];
-      },
-    };
+    // app.sessionMap = {};
+    // app.sessionStore = {
+    //   async get(key) {
+    //     return app.sessionMap[key];
+    //   },
+    //   async set(key, value) {
+    //     app.sessionMap[key] = value;
+    //   },
+    //   async destroy(key) {
+    //     delete app.sessionMap[key];
+    //   },
+    // };
   }
 
   configWillLoad() {

@@ -7,7 +7,7 @@ export default (appInfo: EggAppInfo) => {
   config.keys = appInfo.name + '_1654852917232_2580';
 
   // 全局中间件使用
-  config.middleware = [];
+  config.middleware = [ 'customeError' ];
 
   config.security = {
     csrf: {
@@ -48,6 +48,10 @@ export default (appInfo: EggAppInfo) => {
 
   config.session = {
     encrypt: false,
+  };
+
+  config.jwt = {
+    secret: 'smiling.jsonwebtoken95',
   };
 
   const bizConfig = {

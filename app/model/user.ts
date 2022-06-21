@@ -26,12 +26,14 @@ function initUserModel(app: Application): Model<UserProps> {
     collection: 'user',
     timestamps: true, //  设置自动更新 Date 类属性
     toJSON: {
+      //  查询返回结果处理
       transform(_doc, ret) {
         delete ret.password;
         delete ret.__v;
       },
     },
   });
+  //  Schema 使用插件
   UserSchema.plugin(AutoIncrement, { inc_field: 'id', id: 'users_id_counter' });
 
   return app.mongoose.model('User', UserSchema);

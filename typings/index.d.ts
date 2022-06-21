@@ -26,6 +26,6 @@ declare module 'egg' {
         //  egg-bcrypt 插件配置属性类型定义
         bcrypt: {
             saltRounds: number
-        }
+        };
     }
 }
