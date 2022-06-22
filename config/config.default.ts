@@ -63,12 +63,22 @@ export default (appInfo: EggAppInfo) => {
     },
   };
 
+  const aliCloudConfig = {
+    accessKeyId: 'LTAI5tBeMatufM2ERDh3Sfsa',
+    accessKeySecret: '3ebYalJwp4tcAffqbba6XjulqHJOIg',
+    endpoint: 'dysmsapi.aliyuncs.com',
+  };
+
+  //  业务配置对象
   const bizConfig = {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
     myLogger: { //  配置中间件允许 POST 方法时被使用
       allowedMethod: [ 'POST' ],
     },
     baseUrl: 'default.url',
+
+    //  阿里云配置
+    aliCloudConfig,
   };
 
   return {

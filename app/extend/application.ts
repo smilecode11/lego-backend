@@ -1,7 +1,11 @@
 /** 扩展 application */
 import { Application } from 'egg';
 import axios, { AxiosInstance } from 'axios';
+import Dysmsapi from '@alicloud/dysmsapi20170525';
+import * as $OpenApi from '@alicloud/openapi-client';
+
 const AXIOS = Symbol('Application#axios');
+const ALCLIENT = Symbol('Application#ALClient');
 
 export default {
   // 方法扩展
@@ -18,5 +22,20 @@ export default {
       });
     }
     return this[AXIOS];
+  },
+
+  //  Application 扩展 aliClient 实例
+  get ALClient(): Dysmsapi {
+    const _self = this as Application;
+    const { accessKeyId, accessKeySecret, endpoint } = _self.config.aliCloudConfig;
+    if (!this[ALCLIENT]) {
+      const config = new $OpenApi.Config({
+        accessKeyId,
+        accessKeySecret,
+      });
+      config.endpoint = endpoint;
+      this[ALCLIENT] = new Dysmsapi(config);
+    }
+    return this[ALCLIENT];
   },
 };
