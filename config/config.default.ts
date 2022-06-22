@@ -54,6 +54,15 @@ export default (appInfo: EggAppInfo) => {
     secret: 'smiling.jsonwebtoken95',
   };
 
+  config.redis = {
+    client: {
+      port: 6379,
+      host: '127.0.0.1',
+      db: 0,
+      password: '',
+    },
+  };
+
   const bizConfig = {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
     myLogger: { //  配置中间件允许 POST 方法时被使用

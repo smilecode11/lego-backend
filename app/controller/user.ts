@@ -5,6 +5,10 @@ const userCreateRules = {
   password: { type: 'password', min: 8 },
 };
 
+const veriCodeRules = {
+  phoneNumber: { type: 'string', format: /^1[356789][0-9]{9}$/ },
+};
+
 export const userErrorMessages = {
   inputValidateFail: {
     errno: 101001,
@@ -22,12 +26,20 @@ export const userErrorMessages = {
     errno: 101004,
     message: '登录校验失败',
   },
+  veriCodePhoneNumberFail: {
+    errno: 101005,
+    message: '手机号格式有误',
+  },
+  veriCodeFrequentlyFail: {
+    errno: 101006,
+    message: '获取验证码频繁',
+  },
 };
 
 export default class UserController extends Controller {
   async createByEmail() {
     const { ctx, service } = this;
-    const errors = this.validateUserInput();
+    const errors = this.validateUserInput(userCreateRules);
     if (errors) {
       return ctx.helper.error({ ctx, errorType: 'inputValidateFail', error: errors });
     }
@@ -41,18 +53,41 @@ export default class UserController extends Controller {
   }
 
   /** 验证输入数据格式是否正确*/
-  validateUserInput() {
+  validateUserInput(rules) {
     const { ctx, app } = this;
-    const errors = app.validator.validate(userCreateRules, ctx.request.body);
+    const errors = app.validator.validate(rules, ctx.request.body);
     ctx.logger.warn(errors);
     return errors;
+  }
+
+  /** 手机号验证码获取*/
+  async getVeriCode() {
+    const { ctx, app } = this;
+    //  验证输入手机号格式
+    const errors = this.validateUserInput(veriCodeRules);
+    if (errors) {
+      return ctx.helper.error({ ctx, errorType: 'veriCodePhoneNumberFail', error: errors });
+    }
+    //  1.判断验证码是否存在 redis 中
+    //  验证码存储格式 phoneVeriCode-18958849752
+    const { phoneNumber } = ctx.request.body;
+    const prevVeriCode = await app.redis.get(`phoneVeriCode-${phoneNumber}`);
+    //  2. 存在, 返回频繁
+    if (prevVeriCode) {
+      return ctx.helper.error({ ctx, errorType: 'veriCodeFrequentlyFail', error: errors });
+    }
+    //  3.1 不存在, 生成验证码并存储到 redis, 过期时间为 60s
+    const veriCode = Math.floor((Math.random() * 9000 + 1000));
+    await app.redis.set(`phoneVeriCode-${phoneNumber}`, veriCode, 'ex', 60);
+    //  3.2 返回验证码
+    ctx.helper.success({ ctx, res: { veriCode } });
   }
 
   /** 用户登录 - 邮箱*/
   async loginByEmail() {
     const { ctx, service, app } = this;
     //  检查用户输入
-    const error = this.validateUserInput();
+    const error = this.validateUserInput(userCreateRules);
     if (error) {
       return ctx.helper.error({ ctx, errorType: 'inputValidateFail' });
     }

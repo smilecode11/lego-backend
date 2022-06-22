@@ -8,5 +8,6 @@ export default (app: Application) => {
   router.post('/api/users/create', controller.user.createByEmail);
   router.post('/api/users/login', controller.user.loginByEmail);
   router.get('/api/users/current', jwt, controller.user.current);
+  router.post('/api/users/getVeriCode', controller.user.getVeriCode);
 };
 
