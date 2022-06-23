@@ -87,15 +87,17 @@ export default class UserController extends Controller {
     }
     //  3.1 不存在, 生成验证码
     const veriCode = Math.floor((Math.random() * 9000 + 1000));
-
-    //  **** 使用 ali 短信服务 ****
-    const resp = await ctx.service.user.sendSMS(phoneNumber, veriCode as unknown as string);
-    if (resp.body.code !== 'OK') {
-      return ctx.helper.error({ ctx, errorType: 'sendVeriCodeFail', error: resp.body });
+    //  生产环境使用短信服务
+    if (app.config.env === 'prod') {
+      //  **** 使用 ali 短信服务 ****
+      const resp = await ctx.service.user.sendSMS(phoneNumber, veriCode as unknown as string);
+      if (resp.body.code !== 'OK') {
+        return ctx.helper.error({ ctx, errorType: 'sendVeriCodeFail', error: resp.body });
+      }
     }
     //  3.2 存储到 redis, 过期时间为 60s 并返回验证码
     await app.redis.set(`phoneVeriCode-${phoneNumber}`, veriCode, 'ex', 60);
-    ctx.helper.success({ ctx, res: { message: '验证码发送成功' } });
+    ctx.helper.success({ ctx, res: app.config.env === 'prod' ? null : { veriCode }, msg: '验证码发送成功' });
   }
 
   /** 用户登录 - 邮箱*/
