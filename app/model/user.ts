@@ -9,7 +9,9 @@ export interface UserProps {
   nickName?: string;
   picture?: string;
   phoneNumber?: string;
-  type: 'email' | 'cellphone';
+  type: 'email' | 'cellphone' | 'oauth';
+  provider?: 'gitee',
+  oauthID?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,6 +26,8 @@ function initUserModel(app: Application): Model<UserProps> {
     email: { type: String },
     phoneNumber: { type: String },
     type: { type: String, default: 'email' },
+    provider: { type: String },
+    oauthID: { type: String },
   }, {
     collection: 'user',
     timestamps: true, //  设置自动更新 Date 类属性

@@ -43,6 +43,10 @@ export const userErrorMessages = {
     errno: '101007',
     message: '验证码发送失败',
   },
+  giteeOauthFail: {
+    errno: '101008',
+    message: 'gitee 授权失败',
+  },
 };
 
 export default class UserController extends Controller {
@@ -120,7 +124,7 @@ export default class UserController extends Controller {
       return ctx.helper.error({ ctx, errorType: 'loginCheckFail' });
     }
     //  使用 egg-jwt 在 app 上扩展的 jwt 对象进行 sign 调用
-    const token = app.jwt.sign({ username }, app.config.jwt.secret, { expiresIn: 60 * 60 });
+    const token = app.jwt.sign({ username, _id: user._id }, app.config.jwt.secret, { expiresIn: 60 * 60 });
     ctx.helper.success({ ctx, res: { token }, msg: '登录成功' });
   }
 
@@ -143,16 +147,29 @@ export default class UserController extends Controller {
     ctx.helper.success({ ctx, res: { token } });
   }
 
-  async current() {
-    const { ctx, service } = this;
-    //  加密的 cookie 进行访问, 也必须天极爱 encrypt 属性
-    // const username = ctx.cookies.get('username', { encrypt: true });
-    // const { username } = ctx.session;
-    // if (!username) {
-    //  return ctx.helper.error({ ctx, errorType: 'loginCheckFail' });
-    // }
-    // ctx.helper.success({ ctx, res: { username } });
+  /** 授权页 get*/
+  async oauth() {
+    const { app, ctx } = this;
+    const { cid, redirectURL } = app.config.giteeOauthConfig;
+    ctx.redirect(`https://gitee.com/oauth/authorize?client_id=${cid}&redirect_uri=${redirectURL}&response_type=code`);
+  }
 
+  /** 授权获取 accessToke*/
+  async oauthByGitee() {
+    const { ctx } = this;
+    const { code } = ctx.request.query;
+    try {
+      const token = await ctx.service.user.loginByGitee(code);
+      // 渲染模板, 发送返回 token 等信息
+      await ctx.render('oauth_success.nj', { token });
+      // ctx.helper.success({ ctx, res: { token } });
+    } catch (error) {
+      ctx.helper.error({ ctx, errorType: 'giteeOauthFail' });
+    }
+  }
+
+  async getUserInfo() {
+    const { ctx, service } = this;
     const userData = await service.user.findByUsername(ctx.state.user.username);
     ctx.helper.success({ ctx, res: userData });
   }
