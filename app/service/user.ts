@@ -13,7 +13,7 @@ interface GiteeUserResp {
 export default class UserService extends Service {
   /** 通过邮箱创建用户*/
   async createByEmail(payload: UserProps) {
-    const { ctx } = this;
+    const { ctx, app } = this;
     const { username, password } = payload;
     const passwordHash = await ctx.genHash(password);
     const userCreateData: Partial<UserProps> = {
@@ -21,7 +21,9 @@ export default class UserService extends Service {
       password: passwordHash,
       email: username,
     };
-    return ctx.model.User.create(userCreateData);
+    const newUser = await ctx.model.User.create(userCreateData);
+    const token = app.jwt.sign({ username: newUser.username, _id: newUser._id }, app.config.jwt.secret);
+    return token;
   }
 
   /** 阿里 SMS 短信发送服务*/
