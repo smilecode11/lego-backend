@@ -13,7 +13,8 @@ export default (app: Application) => {
   router.get('/api/users/passport/gitee/callback', controller.user.oauthByGitee);
   router.get('/api/users/getUserInfo', jwtMiddleware, controller.user.getUserInfo);
 
-  //  作品
-  router.post('/api/works', jwtMiddleware, controller.work.createWork);
+  router.post('/api/works', jwtMiddleware, controller.work.createWork); //  创建作品
+  router.get('/api/works', jwtMiddleware, controller.work.myList); //  查询我的作品列表
+  router.get('/api/templates', controller.work.templateList); //  查询模板列表 - 作品
 };
 
