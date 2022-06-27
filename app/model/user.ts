@@ -14,6 +14,7 @@ export interface UserProps {
   oauthID?: string;
   createdAt: Date;
   updatedAt: Date;
+  status: '1' | '2' | '0' //  1 -正常用户 0 -删除用户 2 -其他
 }
 
 function initUserModel(app: Application): Model<UserProps> {
@@ -28,6 +29,7 @@ function initUserModel(app: Application): Model<UserProps> {
     type: { type: String, default: 'email' },
     provider: { type: String },
     oauthID: { type: String },
+    status: { type: String, default: '1' },
   }, {
     collection: 'user',
     timestamps: true, //  设置自动更新 Date 类属性
@@ -36,6 +38,7 @@ function initUserModel(app: Application): Model<UserProps> {
       transform(_doc, ret) {
         delete ret.password;
         delete ret.__v;
+        delete ret._id;
       },
     },
   });

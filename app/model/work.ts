@@ -37,7 +37,15 @@ function initWorkModel(app: Application): Model<WorkProps> {
     //  关联 collection 添加 ref 属性
     user: { type: SchemaTypes.ObjectId, ref: 'User' },
     latestPublishAt: { type: Date },
-  }, { timestamps: true });
+  }, {
+    timestamps: true,
+    toJSON: {
+      transform(_doc, ret) {
+        delete ret._id;
+        delete ret.__v;
+      },
+    },
+  });
 
   WorkSchema.plugin(AutoIncrement, { inc_field: 'id', id: 'works_id_counter' });
 

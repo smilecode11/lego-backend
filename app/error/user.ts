@@ -35,4 +35,8 @@ export const userErrorMessages = {
     errno: 101009,
     message: '用户创建失败',
   },
+  userNoPermissionFail: {
+    errno: 101010,
+    message: '没有权限完成操作',
+  },
 };

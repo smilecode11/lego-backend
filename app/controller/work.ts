@@ -45,6 +45,16 @@ export default class WorkController extends Controller {
     ctx.helper.success({ ctx, res });
   }
 
+  /** 获取单个作品*/
+  async getWorkById() {
+    const { ctx } = this;
+    const work = await ctx.model.Work.findOne({ id: ctx.params.id });
+    if (!work) {
+      return ctx.helper.error({ ctx, errorType: 'noExistsWorkFail' });
+    }
+    return ctx.helper.success({ ctx, res: work });
+  }
+
   /** 获取模板列表*/
   async templateList() {
     const { ctx } = this;
@@ -64,6 +74,16 @@ export default class WorkController extends Controller {
     ctx.helper.success({ ctx, res });
   }
 
+  /** 获取单个模板*/
+  async getTemplateById() {
+    const { ctx } = this;
+    const template = await ctx.model.Work.findOne({ id: ctx.params.id, isTemplate: true });
+    if (!template) {
+      return ctx.helper.error({ ctx, errorType: 'noExistsTemplateFail' });
+    }
+    return ctx.helper.success({ ctx, res: template });
+  }
+
   /** 更新作品*/
   @checkPermission('Work', 'workNoPermissionFail')
   async update() {
@@ -81,9 +101,9 @@ export default class WorkController extends Controller {
     const { ctx } = this;
     const { id } = ctx.params;
     const res = await this.ctx.model.Work.findOneAndDelete({ id }).select('_id id title').lean();
+    // TODO: 考虑逻辑删除
     ctx.helper.success({ ctx, res });
   }
-
 
   @checkPermission('Work', 'workNoPermissionFail')
   async publish(isTemplate: boolean) {
@@ -100,5 +120,28 @@ export default class WorkController extends Controller {
   /** 发布模板*/
   async publishTemplate() {
     await this.publish(true);
+  }
+
+  /** 复制作品*/
+  async copyWork() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+    //  查找作品是否存在
+    const preWork = (await ctx.model.Work.findOne({ id }))?.toObject();
+    if (!preWork) {
+      return ctx.helper.error({ ctx, errorType: 'noExistsWorkFail' });
+    }
+    delete preWork.latestPublishAt;
+    delete preWork.isPublic;
+    delete preWork.isTemplate;
+    delete preWork.isHot;
+    delete preWork._id;
+    delete preWork.__v;
+    delete preWork.id;
+    preWork.copiedCount = 0;
+    preWork.author = '';
+    //  创建作品
+    const newWork = await ctx.service.work.createEmptyWork(preWork);
+    ctx.helper.success({ ctx, res: newWork });
   }
 }

@@ -118,4 +118,20 @@ export default class UserController extends Controller {
     const userData = await service.user.findByUsername(ctx.state.user.username);
     ctx.helper.success({ ctx, res: userData });
   }
+
+  /** 更新用户信息*/
+  async updateUserInfo() {
+    const { ctx, app } = this;
+    const payload = ctx.request.body;
+    const res = await app.model.User.findByIdAndUpdate(ctx.state.user._id, payload, { new: true });
+    ctx.helper.success({ ctx, res });
+  }
+
+  /** 删除用户*/
+  async deleteUser() {
+    const { ctx, app } = this;
+    const { id } = ctx.params;
+    const res = (await app.model.User.findOneAndUpdate({ id }, { status: '0' }, { new: true }));
+    ctx.helper.success({ ctx, res });
+  }
 }
