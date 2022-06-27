@@ -29,6 +29,26 @@ export default class UserController extends Controller {
     ctx.helper.success({ ctx, res: { token } });
   }
 
+  /** 用户登录 - 邮箱*/
+  @inputValidate(userCreateRules, 'inputValidateFail')
+  async loginByEmail() {
+    const { ctx, service, app } = this;
+    //  检查用户是否存在
+    const { username, password } = ctx.request.body;
+    const user = await service.user.findByUsername(username);
+    if (!user) {
+      return ctx.helper.error({ ctx, errorType: 'loginCheckFail' });
+    }
+    //  验证密码是否正确
+    const verifyPwd = await ctx.compare(password, user.password);
+    if (!verifyPwd) {
+      return ctx.helper.error({ ctx, errorType: 'loginCheckFail' });
+    }
+    //  使用 egg-jwt 在 app 上扩展的 jwt 对象进行 sign 调用
+    const token = app.jwt.sign({ username, _id: user._id }, app.config.jwt.secret, { expiresIn: 60 * 60 });
+    ctx.helper.success({ ctx, res: { token }, msg: '登录成功' });
+  }
+
   /** 手机号验证码获取*/
   @inputValidate(veriCodeRules, 'inputValidateFail')
   async getVeriCode() {
@@ -54,26 +74,6 @@ export default class UserController extends Controller {
     //  3.2 存储到 redis, 过期时间为 60s 并返回验证码
     await app.redis.set(`phoneVeriCode-${phoneNumber}`, veriCode, 'ex', 60);
     ctx.helper.success({ ctx, res: app.config.env === 'prod' ? null : { veriCode }, msg: '验证码发送成功' });
-  }
-
-  /** 用户登录 - 邮箱*/
-  @inputValidate(userCreateRules, 'inputValidateFail')
-  async loginByEmail() {
-    const { ctx, service, app } = this;
-    //  检查用户是否存在
-    const { username, password } = ctx.request.body;
-    const user = await service.user.findByUsername(username);
-    if (!user) {
-      return ctx.helper.error({ ctx, errorType: 'loginCheckFail' });
-    }
-    //  验证密码是否正确
-    const verifyPwd = await ctx.compare(password, user.password);
-    if (!verifyPwd) {
-      return ctx.helper.error({ ctx, errorType: 'loginCheckFail' });
-    }
-    //  使用 egg-jwt 在 app 上扩展的 jwt 对象进行 sign 调用
-    const token = app.jwt.sign({ username, _id: user._id }, app.config.jwt.secret, { expiresIn: 60 * 60 });
-    ctx.helper.success({ ctx, res: { token }, msg: '登录成功' });
   }
 
   /** 用户登录 - 手机验证码*/
