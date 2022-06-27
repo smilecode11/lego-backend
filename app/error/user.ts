@@ -20,19 +20,19 @@ export const userErrorMessages = {
     message: '请勿频繁获取短信验证码',
   },
   loginByCellphoneCheckFail: {
-    errno: '101006',
+    errno: 101006,
     message: '验证码错误',
   },
   sendVeriCodeFail: {
-    errno: '101007',
+    errno: 101007,
     message: '验证码发送失败',
   },
   giteeOauthFail: {
-    errno: '101008',
+    errno: 101008,
     message: 'gitee 授权失败',
   },
   createUserFail: {
-    errno: '101009',
+    errno: 101009,
     message: '用户创建失败',
   },
 };

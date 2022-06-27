@@ -53,4 +53,20 @@ export default class WorkService extends Service {
       list: listRes,
     };
   }
+
+  /** 发布作品/模板*/
+  async publish(id: number, isTemplate = false) {
+    const { ctx } = this;
+    const { H5BaseURL } = ctx.app.config;
+    const payload: Partial<WorkProps> = {
+      status: 2,
+      latestPublishAt: new Date(),
+      ...(isTemplate && { isTemplate: true }),
+    };
+    const res = await ctx.model.Work.findOneAndUpdate({ id }, payload, { new: true }).lean();
+    if (res) {
+      const { uuid } = res;
+      return `${H5BaseURL}/p/${id}-${uuid}`;
+    }
+  }
 }

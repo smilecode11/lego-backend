@@ -96,6 +96,8 @@ export default (appInfo: EggAppInfo) => {
     aliCloudConfig,
     //  gitee oauth 配置
     giteeOauthConfig,
+    //  发布作品的域名
+    H5BaseURL: 'http:127.0.0.1/api/pages/',
   };
 
   return {

@@ -16,6 +16,7 @@ export interface WorkProps {
   copiedCount: number;
   status?: 0 | 1 | 2;
   user: ObjectId;
+  latestPublishAt?: Date;
 }
 
 function initWorkModel(app: Application): Model<WorkProps> {
@@ -35,6 +36,7 @@ function initWorkModel(app: Application): Model<WorkProps> {
     status: { type: Number, default: 1 },
     //  关联 collection 添加 ref 属性
     user: { type: SchemaTypes.ObjectId, ref: 'User' },
+    latestPublishAt: { type: Date },
   }, { timestamps: true });
 
   WorkSchema.plugin(AutoIncrement, { inc_field: 'id', id: 'works_id_counter' });

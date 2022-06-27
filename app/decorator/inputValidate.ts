@@ -7,7 +7,7 @@ import { GlobalErrorTypes } from '../error';
 export default function validateInput(rules: any, errorType: GlobalErrorTypes) {
   return function(prototype, key: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
-    descriptor.value = function(...agrs: any[]) {
+    descriptor.value = async function(...agrs: any[]) {
       const _self = this as Controller;
       //  eslint-disable-next-line
       //  @ts-ignore
@@ -16,7 +16,7 @@ export default function validateInput(rules: any, errorType: GlobalErrorTypes) {
       if (errors) {
         return ctx.helper.error({ ctx, errorType, error: errors });
       }
-      return originalMethod.apply(this, agrs);
+      await originalMethod.apply(this, agrs);
     };
   };
 }
