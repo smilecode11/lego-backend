@@ -48,7 +48,7 @@ export default class WorkController extends Controller {
   /** 获取单个作品*/
   async getWorkById() {
     const { ctx } = this;
-    const work = await ctx.model.Work.findOne({ id: ctx.params.id });
+    const work = await ctx.model.Work.findOne({ id: ctx.params.id }).populate({ path: 'user', select: 'username nickName picture' });
     if (!work) {
       return ctx.helper.error({ ctx, errorType: 'noExistsWorkFail' });
     }
@@ -77,7 +77,10 @@ export default class WorkController extends Controller {
   /** 获取单个模板*/
   async getTemplateById() {
     const { ctx } = this;
-    const template = await ctx.model.Work.findOne({ id: ctx.params.id, isTemplate: true });
+    const template = await ctx.model.Work.findOne({ id: ctx.params.id, isTemplate: true }).populate({
+      path: 'user',
+      select: 'username nickName, picture',
+    });
     if (!template) {
       return ctx.helper.error({ ctx, errorType: 'noExistsTemplateFail' });
     }
@@ -138,6 +141,7 @@ export default class WorkController extends Controller {
     delete preWork._id;
     delete preWork.__v;
     delete preWork.id;
+    delete preWork.status;
     preWork.copiedCount = 0;
     preWork.author = '';
     //  创建作品
