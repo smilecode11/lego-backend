@@ -25,5 +25,7 @@ export default (app: Application) => {
   router.post('/api/publish/:id', jwtMiddleware, controller.work.publish); //  发布作品
   router.post('/api/publish-template/:id', jwtMiddleware, controller.work.publishTemplate); //  发布模板
   router.post('/api/works/copy/:id', jwtMiddleware, controller.work.copyWork); //  复制作品
+
+  router.post('/uploads', controller.utils.uploads);
 };
 
