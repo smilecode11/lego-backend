@@ -71,10 +71,10 @@ export default (appInfo: EggAppInfo) => {
     allowMethods: 'GET,HEAD,PUT,OPTIONS,POST,DELETE,PATCH',
   };
 
-  config.multipart = {
-    mode: 'file',
-    tmpdir: join(appInfo.baseDir, '/uploads'),
-  };
+  // config.multipart = {
+  //   mode: 'file',
+  //   tmpdir: join(appInfo.baseDir, '/uploads'),
+  // };
 
   config.static = {
     dir: [
