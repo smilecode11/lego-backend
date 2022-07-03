@@ -89,6 +89,15 @@ export default (appInfo: EggAppInfo) => {
     endpoint: 'dysmsapi.aliyuncs.com',
   };
 
+  config.oss = {
+    client: {
+      accessKeyId: process.env.ALC_ACCESS_KEY || '',
+      accessKeySecret: process.env.ALC_SECRET_KEY || '',
+      bucket: 'smiling-lego-backend',
+      endpoint: 'oss-cn-hangzhou.aliyuncs.com',
+    },
+  };
+
   const giteeOauthConfig = {
     cid: process.env.GITEE_CID,
     secret: process.env.GITEE_SECRET,

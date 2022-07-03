@@ -4,8 +4,24 @@ import { Controller } from 'egg';
 import * as sharp from 'sharp';
 import { createWriteStream } from 'fs';
 import { pipeline } from 'stream/promises';
+import * as streamWormhole from 'stream-wormhole';
 
 export default class UtilsController extends Controller {
+  async uploadToOSS() {
+    const { ctx } = this;
+    const stream = await ctx.getFileStream();
+    //  smiling-logo-backend /imooc-test/**.ext
+    const savedOSSPath = join('imooc-test', nanoid(6) + extname(stream.filename));
+    try {
+      const result = await ctx.oss.put(savedOSSPath, stream);
+      const { url, name } = result;
+      ctx.helper.success({ ctx, res: { name, url } });
+    } catch (error) {
+      await streamWormhole(stream);
+      ctx.helper.error({ ctx, errorType: 'imageUploadFail' });
+    }
+  }
+
   async uploads() {
     const { ctx, app } = this;
     const file = ctx.request.files[0];
