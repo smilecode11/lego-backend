@@ -5,8 +5,11 @@ import * as sharp from 'sharp';
 import { createWriteStream } from 'fs';
 import { pipeline } from 'stream/promises';
 import * as streamWormhole from 'stream-wormhole';
+import * as BusBoy from 'busboy';
+import { FileStream } from '../../typings/app';
 
 export default class UtilsController extends Controller {
+  /** 单文件上传 OSS*/
   async uploadToOSS() {
     const { ctx } = this;
     const stream = await ctx.getFileStream();
@@ -20,6 +23,61 @@ export default class UtilsController extends Controller {
       await streamWormhole(stream);
       ctx.helper.error({ ctx, errorType: 'imageUploadFail' });
     }
+  }
+
+  /** 多文件上传 OSS*/
+  async uploadMutipleFilesToOSS() {
+    const { ctx, app } = this;
+    const parts = ctx.multipart();
+    const urls: string[] = [];
+    let part: FileStream | string[];
+    while ((part = await parts())) {
+      if (Array.isArray(part)) {
+        app.logger.info(part);
+      } else {
+        try {
+          const savedOSSPath = join('imooc-test', nanoid(6) + extname(part.filename));
+          const { url } = await ctx.oss.put(savedOSSPath, part);
+          urls.push(url);
+        } catch (error) {
+          await streamWormhole(part);
+          ctx.helper.error({ ctx, errorType: 'imageUploadFail' });
+        }
+      }
+    }
+    ctx.helper.success({ ctx, res: { urls } });
+  }
+
+  async uploadFileUseBusBoy() {
+    const { ctx, app } = this;
+    return new Promise<string[]>(resolve => {
+      const busboy = BusBoy({ headers: ctx.req.headers });
+      const results: string[] = [];
+      //  文件处理
+      busboy.on('file', (fieldname, file, info) => {
+        const uid = nanoid(6);
+        const savedFilePath = join(app.config.baseDir, 'uploads', uid + extname(info.filename));
+        file.pipe(createWriteStream(savedFilePath));
+        file.on('end', () => {
+          results.push(savedFilePath);
+        });
+      });
+      //  文本护理
+      busboy.on('field', (fieldname, val) => {
+        app.logger.info(fieldname, val);
+      });
+      busboy.on('finish', () => {
+        app.logger.info('finish');
+        resolve(results);
+      });
+      ctx.req.pipe(busboy);
+    });
+  }
+
+  async testBusboy() {
+    const { ctx } = this;
+    const results = await this.uploadFileUseBusBoy();
+    ctx.helper.success({ ctx, res: { results } });
   }
 
   async uploads() {
