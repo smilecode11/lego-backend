@@ -22,7 +22,7 @@
     "clean": "ets clean"
   },
   "dependencies": {
-    "@alicloud/dysmsapi20170525": "^2.0.10",
+    "@alicloud/dysmsapi20170525": "^2.0.13",
     "@alicloud/openapi-client": "^0.4.1",
     "axios": "^0.27.2",
     "busboy": "^1.6.0",
@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "@types/ali-oss": "^6.16.4",
+    "@types/axios": "^0.14.0",
     "@types/busboy": "^1.5.0",
     "@types/dotenv": "^8.2.0",
     "@types/egg": "^1.5.0",

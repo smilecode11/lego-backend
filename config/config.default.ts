@@ -54,7 +54,9 @@ export default (appInfo: EggAppInfo) => {
   };
 
   config.jwt = {
-    secret: 'smiling.jsonwebtoken95',
+    secret: process.env.JWT_SECRET,
+    // enable: true, //  设置默认开启,
+    // match: [ '/api/users/getUserInfo', '/api/users/updateUserInfo', '/api/users/:id', '/api/works', '/api/publish/' ], //  设置匹配成功路由添加 jwt 校验
   };
 
   config.redis = {
@@ -71,10 +73,10 @@ export default (appInfo: EggAppInfo) => {
     allowMethods: 'GET,HEAD,PUT,OPTIONS,POST,DELETE,PATCH',
   };
 
-  // config.multipart = {
-  //   mode: 'file',
-  //   tmpdir: join(appInfo.baseDir, '/uploads'),
-  // };
+  config.multipart = {
+    whitelist: [ '.png', '.jpg', '.jpeg', '.wbmp', '.webp' ],
+    fileSize: '50kb',
+  };
 
   config.static = {
     dir: [

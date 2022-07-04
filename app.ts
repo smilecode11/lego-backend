@@ -20,6 +20,7 @@ export default class AppBoot implements IBoot {
   configWillLoad() {
     //  此时 config 文件已经被读取, 但是未生效
     //  * 这是应用修改配置的最后时机
+    // this.app.config.coreMiddleware.push('customeError');
   }
 
   //  插件启动完毕

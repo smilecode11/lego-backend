@@ -3,13 +3,13 @@
 
 import 'egg';
 import ExportCustomeError from '../../../app/middleware/customeError';
-import ExportJwt from '../../../app/middleware/jwt';
+import ExportCustomeJwt from '../../../app/middleware/customeJwt';
 import ExportMyLogger from '../../../app/middleware/myLogger';
 
 declare module 'egg' {
   interface IMiddleware {
     customeError: typeof ExportCustomeError;
-    jwt: typeof ExportJwt;
+    customeJwt: typeof ExportCustomeJwt;
     myLogger: typeof ExportMyLogger;
   }
 }

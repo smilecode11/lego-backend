@@ -28,7 +28,12 @@ export default class UtilsController extends Controller {
   /** 多文件上传 OSS*/
   async uploadMutipleFilesToOSS() {
     const { ctx, app } = this;
-    const parts = ctx.multipart();
+    const { fileSize } = app.config.multipart;
+    const parts = ctx.multipart({
+      limits: {
+        fileSize: (fileSize as number),
+      },
+    });
     const urls: string[] = [];
     let part: FileStream | string[];
     while ((part = await parts())) {
@@ -39,6 +44,11 @@ export default class UtilsController extends Controller {
           const savedOSSPath = join('imooc-test', nanoid(6) + extname(part.filename));
           const { url } = await ctx.oss.put(savedOSSPath, part);
           urls.push(url);
+          //  判断是否超出限制, 超出限制 part.truncated 则为 true  ->  ①删除上传到 oss 文件 ②抛出错误
+          if (part.truncated) {
+            await ctx.oss.delete(savedOSSPath);
+            return ctx.helper.error({ ctx, errorType: 'imageUploadWithSizeFail', error: `Reach fileSize limit ${fileSize} bytes` });
+          }
         } catch (error) {
           await streamWormhole(part);
           ctx.helper.error({ ctx, errorType: 'imageUploadFail' });
