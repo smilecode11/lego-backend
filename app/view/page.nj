@@ -1,0 +1,16 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8"></meta>
+    <title>{{title}}</title>
+    <meta name="description" content="{{desc}}"></meta>
+    <meta name="viewport" content="width=device-width, user-scalale=no, initial-scale=1.0"></meta>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"></meta>
+    <link href="https://cdn.bootcdn.net/ajax/libs/minireset.css/0.0.2/minireset.min.css" rel="stylesheet">
+</head>
+
+<body style="{{bodyStyle}}">
+    {{html | safe}}
+</body>
+</html>

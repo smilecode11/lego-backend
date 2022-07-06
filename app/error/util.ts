@@ -11,4 +11,8 @@ export const utilErrorMessages = {
     errno: 103003,
     message: '上传文件超出限制大小',
   },
+  h5WorkNotExistFail: {
+    errno: 103004,
+    message: '渲染作品不存在',
+  },
 };

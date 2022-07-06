@@ -9,6 +9,29 @@ import * as BusBoy from 'busboy';
 import { FileStream } from '../../typings/app';
 
 export default class UtilsController extends Controller {
+  splitIdAndUuid(str = '') {
+    const result = { id: '', uuid: '' };
+    if (!str) return result;
+    const firstDashIndex = str.indexOf('-');
+    if (firstDashIndex < 0) return result;
+    result.id = str.slice(0, firstDashIndex);
+    result.uuid = str.slice(firstDashIndex + 1);
+    return result;
+  }
+
+  /** 渲染一个页面*/
+  async renderH5Page() {
+    const { ctx, service } = this;
+    const { idAndUuid } = ctx.params;
+    const query = this.splitIdAndUuid(idAndUuid);
+    try {
+      const pageData = await service.utils.renderToPageData(query);
+      await ctx.render('page.nj', pageData);
+    } catch (error) {
+      ctx.helper.error({ ctx, errorType: 'h5WorkNotExistFail' });
+    }
+  }
+
   /** 单文件上传 OSS*/
   async uploadToOSS() {
     const { ctx } = this;

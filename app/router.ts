@@ -29,5 +29,6 @@ export default (app: Application) => {
   router.post('/works/copy/:id', jwtMiddleware, controller.work.copyWork); //  复制作品
 
   router.post('/upload-img', jwtMiddleware, controller.utils.uploadMutipleFilesToOSS);
+  router.get('/pages/:idAndUuid', controller.utils.renderH5Page);
 };
 
