@@ -1,9 +1,15 @@
 import { Controller } from 'egg';
 import inputValidate from '../decorator/inputValidate';
 import checkPermission from '../decorator/checkPermission';
+import { nanoid } from 'nanoid';
 
 const workCreateRules = {
   title: 'string',
+};
+
+const workCreateChannelRules = {
+  name: 'string',
+  workId: 'string',
 };
 
 export interface IndexCondition {
@@ -16,6 +22,53 @@ export interface IndexCondition {
 }
 
 export default class WorkController extends Controller {
+  /** 创建作品的 channel*/
+  @inputValidate(workCreateChannelRules, 'workValidateFail')
+  async createChannel() {
+    const { ctx } = this;
+    const { name, workId } = ctx.request.body;
+    const newChannel = {
+      name,
+      id: nanoid(6),
+    };
+    const res = await ctx.model.Work.findOneAndUpdate({ id: parseInt(workId) }, { $push: { channels: newChannel } }, { new: true });
+    if (res) {
+      ctx.helper.success({ ctx, res: newChannel });
+    } else {
+      ctx.helper.error({ ctx, errorType: 'channelOperaFail' });
+    }
+  }
+
+  /** 获取作品的 channels */
+  async getWorkChannels() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+    const certianWork = await ctx.model.Work.findOne({ id });
+    if (certianWork) {
+      const { channels } = certianWork;
+      ctx.helper.success({ ctx, res: { count: channels && channels.length || 0, list: channels } });
+    } else {
+      ctx.helper.error({ ctx, errorType: 'channelOperaFail' });
+    }
+  }
+
+  /** 更新 channel */
+  async updateWorkChannel() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+    const { name } = ctx.request.body;
+    await ctx.model.Work.findOneAndUpdate({ 'channels.id': id }, { $set: { 'channels.$.name': name } });
+    ctx.helper.success({ ctx, res: { name } });
+  }
+
+  /** 删除 channel */
+  async deleteWorkChannel() {
+    const { ctx } = this;
+    const { id } = ctx.params;
+    const work = await ctx.model.Work.findOneAndUpdate({ 'channels.id': id }, { $pull: { channels: { id } } }, { new: true });
+    ctx.helper.success({ ctx, res: work });
+  }
+
   /** 创建一个作品*/
   @inputValidate(workCreateRules, 'workValidateFail')
   async createWork() {
@@ -104,7 +157,6 @@ export default class WorkController extends Controller {
     const { ctx } = this;
     const { id } = ctx.params;
     const res = await this.ctx.model.Work.findOneAndDelete({ id }).select('_id id title').lean();
-    // TODO: 考虑逻辑删除
     ctx.helper.success({ ctx, res });
   }
 

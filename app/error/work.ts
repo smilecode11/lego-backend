@@ -15,4 +15,8 @@ export const workErrorMessages = {
     errno: 102004,
     message: '模板不存在',
   },
+  channelOperaFail: {
+    errno: 102005,
+    message: '作品渠道操作失败',
+  },
 };

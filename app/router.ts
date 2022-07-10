@@ -28,6 +28,11 @@ export default (app: Application) => {
   router.post('/publish-template/:id', jwtMiddleware, controller.work.publishTemplate); //  发布模板
   router.post('/works/copy/:id', jwtMiddleware, controller.work.copyWork); //  复制作品
 
+  router.post('/channels', jwtMiddleware, controller.work.createChannel); //  给 work 添加 channel
+  router.get('/channels/:id', jwtMiddleware, controller.work.getWorkChannels); //  获取 work 的 channels
+  router.patch('/channels/:id', jwtMiddleware, controller.work.updateWorkChannel);
+  router.delete('/channels/:id', jwtMiddleware, controller.work.deleteWorkChannel);
+
   router.post('/upload-img', jwtMiddleware, controller.utils.uploadMutipleFilesToOSS);
   router.get('/pages/:idAndUuid', controller.utils.renderH5Page);
 };

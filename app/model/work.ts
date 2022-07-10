@@ -2,6 +2,11 @@ import { Application } from 'egg';
 import { ObjectId, SchemaTypes, Schema, Model } from 'mongoose';
 import * as AutoIncrementFactory from 'mongoose-sequence';
 
+export interface ChannelProps {
+  name: string;
+  id: string;
+}
+
 export interface WorkProps {
   id?: number;
   uuid: string;
@@ -17,6 +22,7 @@ export interface WorkProps {
   status?: 0 | 1 | 2;
   user: ObjectId;
   latestPublishAt?: Date;
+  channels?: ChannelProps[];
 }
 
 function initWorkModel(app: Application): Model<WorkProps> {
@@ -37,6 +43,7 @@ function initWorkModel(app: Application): Model<WorkProps> {
     //  关联 collection 添加 ref 属性
     user: { type: SchemaTypes.ObjectId, ref: 'User' },
     latestPublishAt: { type: Date },
+    channels: { type: Array },
   }, {
     timestamps: true,
     toJSON: {
