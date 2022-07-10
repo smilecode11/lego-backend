@@ -30,7 +30,6 @@ export default class UtilsService extends Service {
         //  计算 vm, 重新赋值: 画布宽度是 375
         const vmNum = num / 375 * 100;
         props[key] = `${vmNum.toFixed(2)}vw`;
-        this.app.logger.info(key, arr, numStr, props[key]);
       });
     });
   }
