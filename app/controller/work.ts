@@ -24,6 +24,7 @@ export interface IndexCondition {
 export default class WorkController extends Controller {
   /** 创建作品的 channel*/
   @inputValidate(workCreateChannelRules, 'workValidateFail')
+  @checkPermission({ casl: 'Channel', mongoose: 'Work' }, 'workNoPermissionFail', { value: { type: 'body', valueKey: 'workId' } })
   async createChannel() {
     const { ctx } = this;
     const { name, workId } = ctx.request.body;
@@ -40,6 +41,7 @@ export default class WorkController extends Controller {
   }
 
   /** 获取作品的 channels */
+  @checkPermission({ casl: 'Channel', mongoose: 'Work' }, 'workNoPermissionFail')
   async getWorkChannels() {
     const { ctx } = this;
     const { id } = ctx.params;
@@ -53,6 +55,7 @@ export default class WorkController extends Controller {
   }
 
   /** 更新 channel */
+  @checkPermission({ casl: 'Channel', mongoose: 'Work' }, 'workNoPermissionFail', { key: 'channels.id' })
   async updateWorkChannel() {
     const { ctx } = this;
     const { id } = ctx.params;
@@ -62,6 +65,7 @@ export default class WorkController extends Controller {
   }
 
   /** 删除 channel */
+  @checkPermission({ casl: 'Channel', mongoose: 'Work' }, 'workNoPermissionFail', { key: 'channels.id' })
   async deleteWorkChannel() {
     const { ctx } = this;
     const { id } = ctx.params;
@@ -160,7 +164,7 @@ export default class WorkController extends Controller {
     ctx.helper.success({ ctx, res });
   }
 
-  @checkPermission('Work', 'workNoPermissionFail')
+  @checkPermission('Work', 'workNoPermissionFail', { action: 'publish' })
   async publish(isTemplate: boolean) {
     const { ctx } = this;
     const url = await this.service.work.publish(ctx.params.id, isTemplate);

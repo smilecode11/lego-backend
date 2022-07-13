@@ -30,8 +30,8 @@ export default (app: Application) => {
 
   router.post('/channels', jwtMiddleware, controller.work.createChannel); //  给 work 添加 channel
   router.get('/channels/:id', jwtMiddleware, controller.work.getWorkChannels); //  获取 work 的 channels
-  router.patch('/channels/:id', jwtMiddleware, controller.work.updateWorkChannel);
-  router.delete('/channels/:id', jwtMiddleware, controller.work.deleteWorkChannel);
+  router.patch('/channels/:id', jwtMiddleware, controller.work.updateWorkChannel); //  更新 channel
+  router.delete('/channels/:id', jwtMiddleware, controller.work.deleteWorkChannel); //  删除 channel
 
   router.post('/upload-img', jwtMiddleware, controller.utils.uploadMutipleFilesToOSS);
   router.get('/pages/:idAndUuid', controller.utils.renderH5Page);

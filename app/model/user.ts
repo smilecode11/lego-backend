@@ -10,11 +10,12 @@ export interface UserProps {
   picture?: string;
   phoneNumber?: string;
   type: 'email' | 'cellphone' | 'oauth';
-  provider?: 'gitee',
+  provider?: 'gitee';
   oauthID?: string;
   createdAt: Date;
   updatedAt: Date;
-  status: '1' | '2' | '0' //  1 -正常用户 0 -删除用户 2 -其他
+  status: '1' | '2' | '0'; //  1 -正常用户 0 -删除用户 2 -其他
+  role?: 'admin' | 'normal'
 }
 
 function initUserModel(app: Application): Model<UserProps> {
@@ -30,6 +31,7 @@ function initUserModel(app: Application): Model<UserProps> {
     provider: { type: String },
     oauthID: { type: String },
     status: { type: String, default: '1' },
+    role: { type: String, default: 'normal' },
   }, {
     collection: 'user',
     timestamps: true, //  设置自动更新 Date 类属性
