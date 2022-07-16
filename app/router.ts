@@ -6,6 +6,7 @@ export default (app: Application) => {
 
   //  指定 prefix, 设置路由前缀
   router.prefix('/api');
+  router.get('/index', controller.test.index);
 
   router.post('/users/create', controller.user.createByEmail);
   router.post('/users/loginByEmail', controller.user.loginByEmail);

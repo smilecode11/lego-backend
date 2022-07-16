@@ -45,7 +45,7 @@ export default class UserController extends Controller {
       return ctx.helper.error({ ctx, errorType: 'loginCheckFail' });
     }
     //  使用 egg-jwt 在 app 上扩展的 jwt 对象进行 sign 调用
-    const token = app.jwt.sign({ username, _id: user._id }, app.config.jwt.secret, { expiresIn: 60 * 60 });
+    const token = app.jwt.sign({ username, _id: user._id }, app.config.jwt.secret, { expiresIn: app.config.jwtExpires });
     ctx.helper.success({ ctx, res: { token }, msg: '登录成功' });
   }
 

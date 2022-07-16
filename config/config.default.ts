@@ -10,12 +10,14 @@ export default (appInfo: EggAppInfo) => {
   config.keys = appInfo.name + '_1654852917232_2580';
 
   // 全局中间件使用
-  config.middleware = [ 'customeError' ];
+  config.middleware = ['customeError'];
 
   config.security = {
     csrf: {
       enable: false,
     },
+    //  允许跨域访问白名单
+    domainWhiteList: ['http://localhost:8080'],
   };
 
   config.bodyParser = {
@@ -68,13 +70,13 @@ export default (appInfo: EggAppInfo) => {
     },
   };
 
-  config.cors = {
-    origin: 'http://localhost:8080',
-    allowMethods: 'GET,HEAD,PUT,OPTIONS,POST,DELETE,PATCH',
-  };
+  // config.cors = {
+  //   origin: 'http://localhost:8080',
+  //   allowMethods: 'GET,HEAD,PUT,OPTIONS,POST,DELETE,PATCH',
+  // };
 
   config.multipart = {
-    whitelist: [ '.png', '.jpg', '.jpeg', '.wbmp', '.webp' ],
+    whitelist: ['.png', '.jpg', '.jpeg', '.wbmp', '.webp'],
     fileSize: '50kb',
   };
 
@@ -112,7 +114,7 @@ export default (appInfo: EggAppInfo) => {
   const bizConfig = {
     sourceUrl: `https://github.com/eggjs/examples/tree/master/${appInfo.name}`,
     myLogger: { //  配置中间件允许 POST 方法时被使用
-      allowedMethod: [ 'POST' ],
+      allowedMethod: ['POST'],
     },
     baseUrl: 'default.url',
 
@@ -122,6 +124,7 @@ export default (appInfo: EggAppInfo) => {
     giteeOauthConfig,
     //  发布作品的域名
     H5BaseURL: 'http:127.0.0.1/api/pages/',
+    jwtExpires: '1h',
   };
 
   return {
