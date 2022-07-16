@@ -21,7 +21,7 @@
     "skipDefaultLibCheck": true,
     "inlineSourceMap": true,
     "importHelpers": true,
-    "esModuleInterop": true
+    // "esModuleInterop": true
   },
   "exclude": [
     "app/public",
