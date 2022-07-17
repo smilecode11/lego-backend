@@ -1,0 +1,17 @@
+version: '3'
+services:
+  lego-mongo:
+    image: mongo
+    container_name: lego-mongo
+    volumes:
+      - '.docker-volumes/mongo/data:/data/db' # mongo 数据映射
+      - '$PWD/mongo-entrypoint/:/docker-entrypoint-initdb.d/' # mongo 初始化脚本映射
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin # init mongo root
+      - MONGO_INITDB_ROOT_PASSWORD=pass 
+  #   image: lego-backend
+  #   container_name: lego-backend
+  #   ports: 
+  #     - 7001:7001

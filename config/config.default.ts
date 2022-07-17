@@ -40,6 +40,10 @@ export default (appInfo: EggAppInfo) => {
 
   config.mongoose = {
     url: 'mongodb://127.0.0.1:27017/lego',
+    options: {
+      user: 'smiling.',
+      pass: '123456',
+    },
   };
 
   config.validate = {
@@ -61,14 +65,14 @@ export default (appInfo: EggAppInfo) => {
     // match: [ '/api/users/getUserInfo', '/api/users/updateUserInfo', '/api/users/:id', '/api/works', '/api/publish/' ], //  设置匹配成功路由添加 jwt 校验
   };
 
-  // config.redis = {
-  //   client: {
-  //     port: 6379,
-  //     host: '127.0.0.1',
-  //     db: 0,
-  //     password: '',
-  //   },
-  // };
+  config.redis = {
+    client: {
+      port: 6379,
+      host: '127.0.0.1',
+      db: 0,
+      password: '',
+    },
+  };
 
   // config.cors = {
   //   origin: 'http://localhost:8080',
