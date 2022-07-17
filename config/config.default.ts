@@ -38,9 +38,9 @@ export default (appInfo: EggAppInfo) => {
     level: 'DEBUG', //  log 文件日志输出最低等级
   };
 
-  // config.mongoose = {
-  //   url: 'mongodb://127.0.0.1:27017/lego',
-  // };
+  config.mongoose = {
+    url: 'mongodb://127.0.0.1:27017/lego',
+  };
 
   config.validate = {
     // convert: false,
