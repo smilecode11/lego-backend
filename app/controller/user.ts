@@ -72,8 +72,10 @@ export default class UserController extends Controller {
       }
     }
     //  3.2 存储到 redis, 过期时间为 60s 并返回验证码
-    // await app.redis.set(`phoneVeriCode-${phoneNumber}`, veriCode, 'ex', 60);
-    ctx.helper.success({ ctx, res: app.config.env === 'prod' ? null : { veriCode }, msg: '验证码发送成功' });
+    /* ts-disable next line*/
+    await app.redis.set(`phoneVeriCode-${phoneNumber}`, veriCode, 'EX', 60);
+    ctx.helper.success({ ctx, res: app.
+      config.env === 'prod' ? null : { veriCode }, msg: '验证码发送成功' });
   }
 
   /** 用户登录 - 手机验证码*/

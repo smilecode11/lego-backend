@@ -21,6 +21,7 @@
     "skipDefaultLibCheck": true,
     "inlineSourceMap": true,
     "importHelpers": true,
+    "resolveJsonModule": true,
     // "esModuleInterop": true
   },
   "exclude": [
