@@ -41,7 +41,7 @@ jobs:
       - name: 'executing ssh and resetart docker'
         uses: appleboy/ssh-action@master
         with:
-          host: ${{secrets.HOST}}
+          host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PWD }}
           script_stop: true
