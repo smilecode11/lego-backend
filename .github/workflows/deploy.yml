@@ -49,6 +49,7 @@ jobs:
           # 停止服务 docker-compose down
           # 启动服务 docker-compose up -d
           # 清理文件, .env 等
+          #3
           script: |
             sudo docker login --username=${{ secrets.ACR_USERNAME }} --password=${{ secrets.ACR_PASSWORD }} registry.cn-hangzhou.aliyuncs.com
             cd ~/lego-backend/
