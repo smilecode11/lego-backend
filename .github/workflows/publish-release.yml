@@ -1,4 +1,4 @@
-name: 自动部署新版本到服务器
+name: Publish Release
 # 在特定 tag 被 push 以后被调用
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - "v*.*.*"
 jobs:
   publish-release:
-    runs-on: ubuntu@latest
+    runs-on: ubuntu-latest
     steps:
       # checkout 代码
       - uses: actions/checkout@v2
