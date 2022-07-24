@@ -20,7 +20,7 @@ services:
     env_file:
       - .env
   lego-backend:
-    image: registry.cn-hangzhou.aliyuncs.com/smiling/lego:0.0.2
+    image: registry.cn-hangzhou.aliyuncs.com/smiling/lego:{{tag}}
     container_name: lego-backend
     ports:
       - 7002:7001
