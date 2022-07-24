@@ -18,6 +18,6 @@ jobs:
         uses: jacobtomlinson/gha-find-replace@v2
         with:
           find: "{{tag}}"
-          replace: ${{ giyhub.ref-name }}
+          replace: ${{ giyhub.ref_name }}
           include: "docker-compose-online.yml"
       - run: cat docker-compose-online.yml
