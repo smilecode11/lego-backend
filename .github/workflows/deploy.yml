@@ -38,7 +38,7 @@ jobs:
           source: "lego-backend"
           target: "~"
       # 通过 ssh 登录然后重启服务
-      - name: 'executing ssh and resetart docker'
+      - name: "executing ssh and resetart docker"
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
