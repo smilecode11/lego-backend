@@ -1,7 +1,7 @@
 {
   "name": "lego-backend",
   "version": "1.0.6",
-  "description": "test",
+  "description": "乐高后端支持",
   "private": true,
   "egg": {
     "typescript": true,
